@@ -97,33 +97,6 @@ static eLTC2943Result_t read_ltc2943_alert(bool* alert_state, const eStatusRegis
   return res;
 }
 
-/**
- * @brief Helper function to get ADC mode from register data
- *
- * @param data - register data
- * @return ADC mode enum
- */
-static eLTC2943AdcMode_t get_adc_mode_from_data(const uint8_t data)
-{
-  eLTC2943AdcMode_t mode = adcm_undefined;
-
-  switch (data & 0x03) { // Last two bits (B[7:6]) shows ADC Mode
-    case 0:
-      mode = adcm_Sleep;
-      break;
-    case 1:
-      mode = adcm_Manual;
-      break;
-    case 2:
-      mode = adcm_Scan;
-      break;
-    case 3:
-      mode = adcm_Automatic;
-      break;
-  }
-  return mode;
-}
-
 /* Functions ----------------------------------*/
 /**
  * @brief Function checks if one of the temperature limits was exceeded
@@ -163,10 +136,10 @@ eLTC2943Result_t get_adc_mode(eLTC2943AdcMode_t* adc_mode)
   } else if (NULL == adc_mode) {
     res = LTC2943_MEM_ERROR;
   } else {
-    *adc_mode = adcm_undefined;
+    *adc_mode = adcm_last;
     res = read_register(&cntr_rg_ptr, &reg_data, sizeof(reg_data));
     if (LTC2943_RESULT_OK == res) {
-      *adc_mode = get_adc_mode_from_data(reg_data);
+      *adc_mode = (eLTC2943AdcMode_t)(reg_data & 0x3); // last 2 bits
       res = LTC2943_RESULT_OK;
     }
   }
@@ -185,7 +158,7 @@ eLTC2943Result_t set_adc_mode(const eLTC2943AdcMode_t adc_mode)
   const uint8_t cntr_rg_ptr = REG_B_CONTROL;
   uint8_t reg_data = 0;
 
-  if (!is_ltc2943_setup() || ((adcm_undefined == adc_mode) || (adcm_last == adc_mode))) {
+  if (!is_ltc2943_setup() || (adcm_last == adc_mode)) {
     res = LTC2943_FAILED;
   } else {
     // get all register data bc we change only last 2 bits
