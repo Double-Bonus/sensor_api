@@ -20,17 +20,18 @@
 #include "i2c.h"
 
 /* Private typedef ----------------------------*/
-// stuts register bitmap (Rename!)
-typedef enum eStatusregister {
-  Undervoltage_Lockout_Alert = 0,
-  Voltage_Alert,
-  Charge_Alert_Low,
-  Charge_Alert_High,
-  Temperature_Alert,
-  Accumulated_Charge_OverUnder_flow,
-  Current_Alert,
-  Reserved = 7
-} eStatusregister_t;
+
+// status register bitmap (Rename!)
+typedef enum eStatusRegister {
+  strg_UndervoltageLockoutAlert = 0,
+  strg_VoltageAlert,
+  strg_ChargeAlertLow,
+  strg_ChargeAlertHigh,
+  strg_TemperatureAlert,
+  strg_AccumulatedChargeOverUnderFlow,
+  strg_CurrentAlert,
+  strg_Reserved = 7
+} eStatusRegister_t;
 
 /* Private define -----------------------------*/
 #define LTC2943_SLAVE_I2C_ADDR 0x64 // 0b0110'0100
@@ -71,11 +72,12 @@ static eLTC2943Result_t read_register(const uint8_t *regs, uint8_t *data_out, co
 	return res;
 }
 
-static eLTC2943Result_t read_ltc2943_alert(bool *alert_state, const eStatusregister_t bit_nr)
+static eLTC2943Result_t read_ltc2943_alert(bool *alert_state, const eStatusRegister_t bit_nr)
 {
 	eLTC2943Result_t res = LTC2943_FAILED;
     const uint8_t stat_rg = REG_A_STATUS;
-	uint8_t reg_data = 0;	
+	uint8_t reg_data = 0;
+
 	if ((is_ltc2943_setup()) && (NULL != alert_state)) {
       res = read_register(&stat_rg, &reg_data, sizeof(reg_data));
 	  if(LTC2943_RESULT_OK == res) {
@@ -89,16 +91,16 @@ static eLTC2943Result_t read_ltc2943_alert(bool *alert_state, const eStatusregis
 /* Functions ----------------------------------*/
 eLTC2943Result_t check_temp_alert(bool *alert_state)
 {
-  return read_ltc2943_alert(alert_state, Temperature_Alert);
+  return read_ltc2943_alert(alert_state, strg_TemperatureAlert);
 }
 
 eLTC2943Result_t check_volt_alert(bool *alert_state)
 {
-  return read_ltc2943_alert(alert_state, Voltage_Alert);
+  return read_ltc2943_alert(alert_state, strg_VoltageAlert);
 }
 
 // function to show working app
-void hello_from_api(void)
+void say_hi_from_api(void)
 {
    printf("Hello from api! :) \n");
 }

@@ -4,5 +4,5 @@
  
 int main(int argc, char *argv[])
 {
-    hello_from_api();
+    say_hi_from_api();
 }
