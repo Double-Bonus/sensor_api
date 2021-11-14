@@ -1,10 +1,10 @@
 # Goal
-Write API functions for LTC2943 sensor *(Multicell Battery Gas Gauge with Temperature, Voltage and Current Measurement)*
+Write API functions for LTC2943 sensor *(Multicell Battery Gas Gauge with Temperature, Voltage and Current Measurement)*.
 
 
 
 ## Requirements 
-- Cmake
+- CMake
 - C/C++ compiler, gcc/clang etc. *(Visual Studio provides their own compiler if working in Windows)*
 
 
@@ -16,18 +16,25 @@ Write API functions for LTC2943 sensor *(Multicell Battery Gas Gauge with Temper
 
 
 ## Quickstart
-
-(todo cmake can handle this!)
 ```console
 mkdir build 
 cd build
 ```
 
-
-I'm using [ninja](https://ninja-build.org/) to build project but project can be build with Visual Studio(default cmake generator) if using Windows.
+#### Building on Windows
+I'm using [ninja](https://ninja-build.org/) to build project but project can be build with Visual Studio(default CMake generator).
 ```console
 cmake .. -G"Ninja"
 ninja
 .\LTC2943_api.exe
 ```
+
+#### Building on Linux
+```console
+cmake ..
+make
+./LTC2943_api
+```
+
+
 
