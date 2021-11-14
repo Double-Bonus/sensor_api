@@ -27,6 +27,10 @@ eLTC2943Result_t check_temp_alert(bool *alert_state);
 
 eLTC2943Result_t check_volt_alert(bool *alert_state);
 
+eLTC2943Result_t get_adc_mode(eLTC2943AdcMode_t *adc_mode);
+
+eLTC2943Result_t set_adc_mode(const eLTC2943AdcMode_t adc_mode);
+
 void say_hi_from_api(void);
 
 
