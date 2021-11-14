@@ -5,7 +5,7 @@
  * 
  */
 
-#include "include/i2c.h"
+#include "i2c.h"
 
 
 bool i2cInit(void)

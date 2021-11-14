@@ -15,8 +15,9 @@
 /* Includes -----------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
-#include "include/sensor_LTC2943.h"
-#include "include/i2c.h"
+#include <stdio.h> // just to show working basic build
+#include "sensor_LTC2943.h"
+#include "i2c.h"
 
 /* Private typedef ----------------------------*/
 // stuts register bitmap (Rename!)
