@@ -1,9 +1,8 @@
+#pragma once
+
 #include <stdint.h>
 #include <stdbool.h>
 
-#pragma once
-
-// for now enought!
 typedef enum eLTC2943Result {
   LTC2943_RESULT_OK = 0,
   LTC2943_FAILED,
@@ -32,7 +31,6 @@ eLTC2943Result_t get_adc_mode(eLTC2943AdcMode_t *adc_mode);
 eLTC2943Result_t set_adc_mode(const eLTC2943AdcMode_t adc_mode);
 
 void say_hi_from_api(void);
-
 
 #ifdef __cplusplus
 }

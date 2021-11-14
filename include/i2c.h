@@ -1,7 +1,7 @@
+#pragma once
+
 #include <stdint.h>
 #include <stdbool.h>
-
-#pragma once
 
 #ifdef __cplusplus
 extern "C" {
