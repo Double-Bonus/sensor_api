@@ -1,20 +1,13 @@
 /**
  * @file sensor_LTC2943.c
- * @brief API function implementation for LTC2943 IC
+ * @brief API functions implementation for LTC2943 IC
  * @date 2021-11-13
  * 
  */
 
-// TODO
-/*
-    1. Change chip's ADC mode into one of these modes: automatic mode, scan mode, manual mode, sleep.
-    2. Get chip's ADC mode.
-*/
-
-
 /* Includes -----------------------------------*/
-#include <stdint.h>
-#include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 #include <stdio.h> // just to show working basic build
 #include "sensor_LTC2943.h"
 #include "i2c.h"
@@ -59,7 +52,7 @@ static eLTC2943Result_t read_register(const uint8_t *regs, uint8_t *data_out, co
 {
 	eLTC2943Result_t res = LTC2943_FAILED;
 
-	if (NULL != regs) {
+	if ((NULL != regs) || (0 == size)) {
 	  if (i2cWrite(LTC2943_SLAVE_I2C_ADDR, regs, 1)) {
 	    if (i2cRead(LTC2943_SLAVE_I2C_ADDR, data_out, size)) {
 			res = LTC2943_RESULT_OK;
@@ -72,17 +65,31 @@ static eLTC2943Result_t read_register(const uint8_t *regs, uint8_t *data_out, co
 	return res;
 }
 
-
-// TODO !!!
-static eLTC2943Result_t write_register(const uint8_t *regs, uint8_t *data_out, const uint16_t size)
+static eLTC2943Result_t write_register(const uint8_t *regs, const uint8_t *data_in, const uint16_t size)
 {
-	return LTC2943_FAILED;
+	eLTC2943Result_t res = LTC2943_FAILED;
+	uint8_t *temp_buff = NULL;
+
+	if((NULL == data_in) || (0 == size) || (NULL == regs)) {
+		res = LTC2943_MEM_ERROR;
+	} else {
+		temp_buff = calloc(1, size + 1);
+	}
+	if(NULL != temp_buff) {
+		memcpy(temp_buff, regs, 1);
+		memcpy(temp_buff + 1, data_in, size);
+		if (i2cWrite(LTC2943_SLAVE_I2C_ADDR, temp_buff, size + 1)) {
+		  res = LTC2943_RESULT_OK;
+		}
+		free(temp_buff);
+	}
+	return res;
 }
 
 static eLTC2943Result_t read_ltc2943_alert(bool *alert_state, const eStatusRegister_t bit_nr)
 {
 	eLTC2943Result_t res = LTC2943_FAILED;
-    const uint8_t stat_rg = REG_A_STATUS; // galima iskart pointeri deti!!!!
+    const uint8_t stat_rg = REG_A_STATUS;
 	uint8_t reg_data = 0;
 
 	if ((is_ltc2943_setup()) && (NULL != alert_state)) {
@@ -115,7 +122,6 @@ static eLTC2943AdcMode_t get_adc_mode_from_data(const uint8_t data)
    }
    return mode;
 }
-
 
 /* Functions ----------------------------------*/
 eLTC2943Result_t check_temp_alert(bool *alert_state)
